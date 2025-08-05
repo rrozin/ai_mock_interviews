@@ -103,6 +103,7 @@ export async function getFeedbackByInterviewId(params: GetFeedbackByInterviewIdP
 
   const feedback = await db
     .collection('feedback')
+    .orderBy('createdAt', 'desc')
     .where('interviewId', '==', interviewId)
     .where('userId', '==', userId)
     .limit(1)
@@ -112,7 +113,7 @@ export async function getFeedbackByInterviewId(params: GetFeedbackByInterviewIdP
     return null;
   }
 
-  const feedbackDoc = feedback.docs[0]
+  const feedbackDoc = feedback.docs[0];
 
   return {
     id: feedbackDoc.id,

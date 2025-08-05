@@ -13,8 +13,8 @@ const Page = async () => {
     await getLatestInterviews({ userId: user?.id! })
   ]);
 
-  const hasPastInterviews = userInterviews?.length > 0;
-  const hasUpcomingInterviews = latestInterviews?.length > 0;
+  const hasPastInterviews = userInterviews?.length! > 0;
+  const hasUpcomingInterviews = latestInterviews?.length! > 0;
 
   return (
     <>
@@ -51,6 +51,7 @@ const Page = async () => {
 
       <section className="flex flex-col gap-6 mt-8">
         <h2>Take an Interview</h2>
+        <p>These interviews are created from other users.</p>
         <div className="interviews-section">
           {/* {!dummyInterviews.length && <p>There are no interviews available.</p>} */}
 
