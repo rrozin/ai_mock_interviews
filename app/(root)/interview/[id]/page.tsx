@@ -6,7 +6,7 @@ import { getRandomInterviewCover } from "@/lib/utils";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
-const Page = async ({ params }: RouteParams) => {
+const InterviewDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
   const user = await getCurrrentUser();
   const interview = await getInterviewsById(id);
@@ -28,7 +28,7 @@ const Page = async ({ params }: RouteParams) => {
         <p className="bg-dark-200 px-4 py-2 rounded-lg h-fit capitalize">{interview.type}</p>
       </div>
       <Agent 
-        userName={user?.name}
+        userName={user?.name || ''}
         userId={user?.id}
         interviewId={id}
         type='interview'
@@ -37,4 +37,4 @@ const Page = async ({ params }: RouteParams) => {
   );
 };
 
-export default Page;
+export default InterviewDetails;
