@@ -1,5 +1,6 @@
 "use client";
 
+import { interviewer } from "@/constants";
 import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
 import Image from "next/image";
@@ -19,7 +20,7 @@ interface SavedMessage {
   content: string;
 }
 
-const Agent = ({ userName, userId, type, questions }: AgentProps) => {
+const Agent = ({ userName, userId, type, interviewId, questions }: AgentProps) => {
   const router = useRouter();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
@@ -58,10 +59,32 @@ const Agent = ({ userName, userId, type, questions }: AgentProps) => {
     };
   }, []);
 
+  const handleGenerateFeedback = async (messages: SavedMessage[]) => {
+    console.log('Generate feedback here.');
+
+    // TODO: Create a server action that generates feedback
+    const { success, id } = {
+      success: true,
+      id: 'feecback-id'
+    }
+
+    if(success && id) {
+     router.push(`/interview/${interviewId}/feedback`);
+    } else {
+      console.log('Error saving feedback');
+      router.push('/')
+    }
+  }
+
   useEffect(() => {
     if (callStatus === CallStatus.FINISHED) {
-      router.push('/');
+      if(type === 'generate') {
+        router.push('/');
+      } else {
+        handleGenerateFeedback(messages);
+      }
     }
+
   }, [messages, callStatus, type, userId]);
 
   const handleCall = async () => {
@@ -73,7 +96,7 @@ const Agent = ({ userName, userId, type, questions }: AgentProps) => {
         undefined,
         undefined,
         process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!,
-        {
+        { 
           variableValues: {
             username: userName,
             userid: userId,
@@ -88,7 +111,7 @@ const Agent = ({ userName, userId, type, questions }: AgentProps) => {
           .join("\n");
       }
       
-      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
+      await vapi.start(interviewer, {
         variableValues: {
           questions: formattedQuestions,
         }
